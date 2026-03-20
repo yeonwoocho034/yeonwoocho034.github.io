@@ -414,6 +414,7 @@
       line-height: 1.9;
       color: var(--text-muted);
     }
+    .showcase-spotify { margin-top: 1.2rem; }
     .showcase-date {
       font-size: 10px;
       color: var(--text-faint);
@@ -452,9 +453,9 @@
     }
     .gallery-item-date { font-size: 10px; color: var(--text-faint); letter-spacing: 0.04em; }
 
-    /* ── CARS ── */
-    .cars-list { border-top: 1px solid var(--border); }
-    .car-row {
+    /* ── TEA ── */
+    .tea-list { border-top: 1px solid var(--border); }
+    .tea-row {
       display: flex;
       align-items: center;
       gap: 1.2rem;
@@ -462,8 +463,8 @@
       border-bottom: 1px solid var(--border);
       cursor: pointer;
     }
-    .car-row:hover .car-title { opacity: 0.5; }
-    .car-thumb {
+    .tea-row:hover .tea-title { opacity: 0.5; }
+    .tea-thumb {
       width: 56px;
       height: 42px;
       object-fit: cover;
@@ -471,26 +472,26 @@
       flex-shrink: 0;
       background: var(--border);
     }
-    .car-thumb-empty {
+    .tea-thumb-empty {
       width: 56px;
       height: 42px;
       background: var(--border);
       flex-shrink: 0;
     }
-    .car-title { font-size: 13px; font-weight: 300; color: var(--text); flex: 1; transition: opacity 0.15s; }
-    .car-date { font-size: 10px; color: var(--text-faint); flex-shrink: 0; }
+    .tea-title { font-size: 13px; font-weight: 300; color: var(--text); flex: 1; transition: opacity 0.15s; }
+    .tea-date { font-size: 10px; color: var(--text-faint); flex-shrink: 0; }
 
-    /* ── CAR ITEM ── */
-    .car-photos { display: flex; gap: 4px; margin-bottom: 2rem; }
-    .car-photos img { width: 100%; height: auto; display: block; flex: 1; }
-    .car-body {
+    /* ── TEA ITEM ── */
+    .tea-photos { display: flex; gap: 4px; margin-bottom: 2rem; }
+    .tea-photos img { width: 100%; height: auto; display: block; flex: 1; }
+    .tea-body {
       font-size: 14px;
       font-weight: 300;
       line-height: 2;
       color: var(--text);
       max-width: 600px;
     }
-    .car-body p { margin-bottom: 1.4rem; }
+    .tea-body p { margin-bottom: 1.4rem; }
 
     /* ── RECENT ── */
     .recent-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: 0.8rem; }
@@ -526,7 +527,7 @@
       <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
       <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
       <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
-      <li><a href="#" onclick="showPage('cars')" id="nav-cars">cars</a></li>
+      <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
       <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
     </ul>
   </nav>
@@ -547,7 +548,10 @@
         <!-- 짧은 글 여기서 수정 -->
         <p class="showcase-note">여기에 짧은 글을 적어주세요.<br>사진에 대한 이야기나 요즘 생각 등 자유롭게.</p>
         <p class="showcase-date">2025. 09</p>
-        <p class="spotify-embed"><iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6QdcNiCXfLzos3EynD3pHf?utm_source=generator" width="55%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></p>
+        <!-- Spotify: 공유 → Embed track → src 주소만 바꾸면 돼요 -->
+        <div class="showcase-spotify">
+          <iframe style="border-radius:4px" src="https://open.spotify.com/embed/track/6QdcNiCXfLzos3EynD3pHf?utm_source=generator" width="100%" height="80" frameborder="0" allow="encrypted-media"></iframe>
+        </div>
       </div>
     </div>
     <div id="home-recent"></div>
@@ -591,20 +595,20 @@
     </div>
   </div>
 
-  <!-- ── CARS PAGE ── -->
-  <div id="page-cars" class="page">
-    <div class="cars-list" id="cars-list"></div>
+  <!-- ── TEA PAGE ── -->
+  <div id="page-tea" class="page">
+    <div class="tea-list" id="tea-list"></div>
   </div>
 
-  <!-- ── CAR ITEM PAGE ── -->
-  <div id="page-car-item" class="page">
-    <a class="article-back" href="#" onclick="showPage('cars')">← 돌아가기</a>
+  <!-- ── TEA ITEM PAGE ── -->
+  <div id="page-tea-item" class="page">
+    <a class="article-back" href="#" onclick="showPage('tea')">← 돌아가기</a>
     <div class="article-header">
-      <h1 class="article-title" id="car-item-title"></h1>
-      <p class="article-date" id="car-item-date"></p>
+      <h1 class="article-title" id="tea-item-title"></h1>
+      <p class="article-date" id="tea-item-date"></p>
     </div>
-    <div class="car-photos" id="car-item-photos"></div>
-    <div class="car-body" id="car-item-body"></div>
+    <div class="tea-photos" id="tea-item-photos"></div>
+    <div class="tea-body" id="tea-item-body"></div>
   </div>
 
   <!-- ── GUESTBOOK PAGE ── -->
@@ -620,39 +624,39 @@
 </div>
 
 <script>
-  const carsData = [
+  const teaData = [
     {
-      title: 'BMW 3 Series',
+      title: '다즐링 퍼스트 플러시',
       date: '2025. 09',
       photos: ['photos/car1.jpeg'],
       body: '<p>여기에 차에 대한 기록을 적어주세요.</p>'
     },
     {
-      title: 'Porsche 911',
+      title: '우지 교쿠로',
       date: '2025. 08',
       photos: ['photos/car2.jpeg'],
       body: '<p>여기에 차에 대한 기록을 적어주세요.</p>'
     }
   ];
 
-  function renderCars() {
-    const el = document.getElementById('cars-list');
-    el.innerHTML = carsData.map((c, i) => `
-      <div class="car-row" onclick="showCarItem(${i})">
+  function renderTea() {
+    const el = document.getElementById('tea-list');
+    el.innerHTML = teaData.map((c, i) => `
+      <div class="tea-row" onclick="showTeaItem(${i})">
         ${c.photos[0]
-          ? `<img class="car-thumb" src="${c.photos[0]}" alt="" onerror="this.outerHTML='<div class=car-thumb-empty></div>'">`
-          : '<div class="car-thumb-empty"></div>'}
-        <span class="car-title">${c.title}</span>
-        <span class="car-date">${c.date}</span>
+          ? `<img class="tea-thumb" src="${c.photos[0]}" alt="" onerror="this.outerHTML='<div class=car-thumb-empty></div>'">`
+          : '<div class="tea-thumb-empty"></div>'}
+        <span class="tea-title">${c.title}</span>
+        <span class="tea-date">${c.date}</span>
       </div>`).join('');
   }
 
-  function showCarItem(i) {
-    const c = carsData[i];
-    document.getElementById('car-item-title').textContent = c.title;
-    document.getElementById('car-item-date').textContent = c.date;
-    document.getElementById('car-item-photos').innerHTML = c.photos.map(p => `<img src="${p}" alt="">`).join('');
-    document.getElementById('car-item-body').innerHTML = c.body;
+  function showTeaItem(i) {
+    const c = teaData[i];
+    document.getElementById('tea-item-title').textContent = c.title;
+    document.getElementById('tea-item-date').textContent = c.date;
+    document.getElementById('tea-item-photos').innerHTML = c.photos.map(p => `<img src="${p}" alt="">`).join('');
+    document.getElementById('tea-item-body').innerHTML = c.body;
     showPage('car-item');
   }
 
@@ -794,7 +798,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', cars: 'nav-cars', 'car-item': 'nav-cars', guestbook: 'nav-guestbook' };
+    const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     location.hash = name === 'home' ? '' : name;
@@ -833,7 +837,7 @@
   renderHomeRecent();
   renderThoughts();
   renderGallery();
-  renderCars();
+  renderTea();
   renderQuotesPage();
 
   const hash = location.hash.replace('#', '');
@@ -841,7 +845,7 @@
   else if (hash === 'quotes') showPage('quotes');
   else if (hash === 'gallery') showPage('gallery');
   else if (hash === 'gallery-item') showPage('gallery');
-  else if (hash === 'cars') showPage('cars');
+  else if (hash === 'tea') showPage('tea');
   else if (hash === 'guestbook') showPage('guestbook');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
