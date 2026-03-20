@@ -406,8 +406,8 @@
   </nav>
 
   <div class="hero">
-    <h1>Personal<br>Blog<br>by Yeonwoo Cho</h1>
-    <p class="hero-sub">하이 헬로</p>
+    <h1>쓰고,<br>모으고,<br>남긴다</h1>
+    <p class="hero-sub">비정기 발행</p>
   </div>
 
   <!-- ── HOME ── -->
@@ -493,7 +493,7 @@
 
   <!-- ── GUESTBOOK PAGE ── -->
   <div id="page-guestbook" class="page">
-    <div id="gb-success" style="display:none; padding: 1.5rem 0; font-size:12px; color:var(--g); letter-spacing:0.04em;">남겨주셔서 감사해요 →</div>
+    <div class="guestbook-list" id="gb-list"></div>
     <form class="gb-form" name="guestbook" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleGbSubmit(event)">
       <input type="hidden" name="form-name" value="guestbook">
       <input type="hidden" name="bot-field" style="display:none">
@@ -527,12 +527,25 @@
     }
   };
 
+  function renderGuestbook() {
+    const list = document.getElementById('gb-list');
+    const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
+    list.innerHTML = entries.map(e => `
+      <div class="gb-entry">
+        <p class="gb-entry-name">${e.name}</p>
+        <p class="gb-entry-msg">${e.msg}</p>
+        <p class="gb-entry-date">${e.date}</p>
+      </div>`).join('');
+  }
+
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
     const navMap = { home: 'nav-home', quotes: 'nav-quotes', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
+    if (name === 'guestbook') renderGuestbook();
+    location.hash = name === 'home' ? '' : name;
     window.scrollTo(0, 0);
     return false;
   }
@@ -543,19 +556,33 @@
     document.getElementById('article-title').textContent = a.title;
     document.getElementById('article-date').textContent = a.date;
     document.getElementById('article-body').innerHTML = a.body;
+    location.hash = 'article-' + id;
     showPage('article');
   }
 
   function handleGbSubmit(e) {
     e.preventDefault();
-    const form = e.target;
+    const name = document.getElementById('gb-name').value.trim();
+    const msg = document.getElementById('gb-msg').value.trim();
+    if (!name || !msg) return;
+    const today = new Date();
+    const date = `${today.getFullYear()}. ${String(today.getMonth()+1).padStart(2,'0')}. ${String(today.getDate()).padStart(2,'0')}`;
+    const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
+    entries.push({ name, msg, date });
+    localStorage.setItem('gb-entries', JSON.stringify(entries));
     fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(new FormData(form)).toString()
-    }).then(() => {
-      form.style.display = 'none';
-      document.getElementById('gb-success').style.display = 'block';
-    }).catch(() => alert('오류가 발생했어요. 다시 시도해주세요.'));
+      body: new URLSearchParams(new FormData(e.target)).toString()
+    }).catch(() => {});
+    document.getElementById('gb-name').value = '';
+    document.getElementById('gb-msg').value = '';
+    renderGuestbook();
   }
+
+  const hash = location.hash.replace('#', '');
+  if (hash === 'quotes') showPage('quotes');
+  else if (hash === 'guestbook') showPage('guestbook');
+  else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
+  else showPage('home');
 </script>
 </body>
 </html>
