@@ -515,22 +515,6 @@
     .thought-num { font-size: 10px; color: var(--g); letter-spacing: 0.06em; flex-shrink: 0; }
     .thought-title { font-size: 14px; font-weight: 300; color: var(--text); flex: 1; transition: opacity 0.15s; }
     .thought-date { font-size: 10px; color: var(--text-faint); flex-shrink: 0; }
-    /* ── PREV/NEXT ── */
-    .article-nav {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-    }
-    .article-nav a {
-      font-size: 11px;
-      color: var(--text-faint);
-      text-decoration: none;
-      cursor: pointer;
-      transition: color 0.15s;
-    }
-    .article-nav a:hover { color: var(--text); }
   </style>
 </head>
 <body>
@@ -582,7 +566,6 @@
       <p class="article-date" id="article-date"></p>
     </div>
     <div class="article-body" id="article-body"></div>
-    <div class="article-nav" id="article-nav"></div>
   </div>
 
   <!-- ── THOUGHTS PAGE ── -->
@@ -626,7 +609,6 @@
     </div>
     <div class="tea-photos" id="tea-item-photos"></div>
     <div class="tea-body" id="tea-item-body"></div>
-    <div class="article-nav" id="tea-item-nav"></div>
   </div>
 
   <!-- ── GUESTBOOK PAGE ── -->
@@ -675,12 +657,7 @@
     document.getElementById('tea-item-date').textContent = c.date;
     document.getElementById('tea-item-photos').innerHTML = c.photos.map(p => `<img src="${p}" alt="">`).join('');
     document.getElementById('tea-item-body').innerHTML = c.body;
-    const prev = teaData[i+1];
-    const next = teaData[i-1];
-    document.getElementById('tea-item-nav').innerHTML =
-      `<span>${prev ? `<a onclick="showTeaItem(${i+1})">← ${prev.title}</a>` : ''}</span>` +
-      `<span>${next ? `<a onclick="showTeaItem(${i-1})">${next.title} →</a>` : ''}</span>`;
-    showPage('tea-item');
+    showPage('car-item');
   }
 
   const galleryData = [
@@ -818,6 +795,12 @@
   }
 
   function showPage(name) {
+    if (name !== 'quotes') {
+      document.querySelectorAll('.accordion-head.open').forEach(h => {
+        h.classList.remove('open');
+        h.nextElementSibling.classList.remove('open');
+      });
+    }
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
@@ -830,19 +813,11 @@
   }
 
   function showArticle(id) {
-    id = parseInt(id);
     const a = articles[id];
     document.getElementById('article-num').textContent = a.num;
     document.getElementById('article-title').textContent = a.title;
     document.getElementById('article-date').textContent = a.date;
     document.getElementById('article-body').innerHTML = a.body;
-    const ids = Object.keys(articles).map(Number).sort((a,b) => b-a);
-    const idx = ids.indexOf(id);
-    const prev = ids[idx+1];
-    const next = ids[idx-1];
-    document.getElementById('article-nav').innerHTML =
-      `<span>${prev ? `<a onclick="showArticle(${prev})">← ${articles[prev].title}</a>` : ''}</span>` +
-      `<span>${next ? `<a onclick="showArticle(${next})">${articles[next].title} →</a>` : ''}</span>`;
     location.hash = 'article-' + id;
     showPage('article');
   }
