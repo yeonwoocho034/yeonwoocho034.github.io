@@ -578,22 +578,12 @@
     .fade-up { opacity: 0; animation: fadeUp 0.4s ease forwards; }
     .fade-in { opacity: 0; animation: fadeIn 0.4s ease forwards; }
     /* ── GALLERY SORT ── */
-    .gallery-sort {
-      display: flex;
-      gap: 1.2rem;
-      margin-bottom: 1.2rem;
-    }
+    .gallery-sort { display: flex; gap: 1.2rem; margin-bottom: 1.2rem; }
     .sort-btn {
       font-family: 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', sans-serif;
-      font-size: 10px;
-      font-weight: 300;
-      letter-spacing: 0.06em;
-      color: var(--text-faint);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: color 0.15s;
+      font-size: 10px; font-weight: 300; letter-spacing: 0.06em;
+      color: var(--text-faint); background: none; border: none;
+      cursor: pointer; padding: 0; transition: color 0.15s;
     }
     .sort-btn.active { color: var(--text); }
     .sort-btn:hover { color: var(--text-muted); }
@@ -762,10 +752,10 @@
       photo: 'photos/2.jpeg',
       note: 'Estelle 언니랑 Goldstein Reserve에서. 맨발 토스트!',
       date: 'Jan 4, 2026'
-    }
+    },
     {
       photo: 'photos/3.jpeg',
-      note: 'Coogie Beach, Sydney. Wylie's Baths.',
+      note: 'Coogie Beach, Sydney. Wylies Baths.',
       date: 'Jan 4, 2026'
     }
   ];
@@ -782,9 +772,7 @@
   function renderGallery() {
     const el = document.getElementById('gallery-grid');
     let items = galleryData.map((g, i) => ({ ...g, i }));
-    if (gallerySortMode === 'recent') {
-      items = items.reverse();
-    }
+    if (gallerySortMode === 'recent') items = items.reverse();
     el.innerHTML = items.map((g, idx) => `
       <div class="gallery-photo fade-in" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showGalleryItem(${g.i})">
         <img src="${g.photo}" alt="">
@@ -919,7 +907,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
+    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     if (name === 'thoughts') renderThoughts();
