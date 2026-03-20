@@ -427,7 +427,70 @@
       column-gap: 4px;
     }
     .gallery-photo { break-inside: avoid; margin-bottom: 4px; }
-    .gallery-photo img { width: 100%; height: auto; display: block; }
+    .gallery-photo img { width: 100%; height: auto; display: block; cursor: pointer; }
+    .gallery-photo:hover img { opacity: 0.85; transition: opacity 0.15s; }
+
+    /* ── GALLERY ITEM ── */
+    .gallery-item-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      padding-top: 0;
+    }
+    .gallery-item-layout img { width: 100%; height: auto; display: block; }
+    .gallery-item-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .gallery-item-note {
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .gallery-item-date { font-size: 10px; color: var(--text-faint); letter-spacing: 0.04em; }
+
+    /* ── CARS ── */
+    .cars-list { border-top: 1px solid var(--border); }
+    .car-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .car-row:hover .car-title { opacity: 0.5; }
+    .car-thumb {
+      width: 56px;
+      height: 42px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+      background: var(--border);
+    }
+    .car-thumb-empty {
+      width: 56px;
+      height: 42px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .car-title { font-size: 13px; font-weight: 300; color: var(--text); flex: 1; transition: opacity 0.15s; }
+    .car-date { font-size: 10px; color: var(--text-faint); flex-shrink: 0; }
+
+    /* ── CAR ITEM ── */
+    .car-photos { display: flex; gap: 4px; margin-bottom: 2rem; }
+    .car-photos img { width: 100%; height: auto; display: block; flex: 1; }
+    .car-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 2;
+      color: var(--text);
+      max-width: 600px;
+    }
+    .car-body p { margin-bottom: 1.4rem; }
 
     /* ── RECENT ── */
     .recent-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: 0.8rem; }
@@ -463,6 +526,7 @@
       <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
       <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
       <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
+      <li><a href="#" onclick="showPage('cars')" id="nav-cars">cars</a></li>
       <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
     </ul>
   </nav>
@@ -483,6 +547,7 @@
         <!-- 짧은 글 여기서 수정 -->
         <p class="showcase-note">여기에 짧은 글을 적어주세요.<br>사진에 대한 이야기나 요즘 생각 등 자유롭게.</p>
         <p class="showcase-date">2025. 09</p>
+        <p class="spotify-embed"><iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/6QdcNiCXfLzos3EynD3pHf?utm_source=generator" width="55%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></p>
       </div>
     </div>
     <div id="home-recent"></div>
@@ -511,11 +576,35 @@
 
   <!-- ── GALLERY PAGE ── -->
   <div id="page-gallery" class="page">
-    <div class="gallery">
-      <!-- 사진 추가: <div class="gallery-photo"><img src="photos/파일명.jpg" alt=""></div> -->
-      <div class="gallery-photo"><img src="photos/1.jpeg" alt=""></div>
-      <div class="gallery-photo"><img src="photos/2.jpeg" alt=""></div>
+    <div class="gallery" id="gallery-grid"></div>
+  </div>
+
+  <!-- ── GALLERY ITEM PAGE ── -->
+  <div id="page-gallery-item" class="page">
+    <a class="article-back" href="#" onclick="showPage('gallery')">← 돌아가기</a>
+    <div class="gallery-item-layout" style="margin-top:2rem;">
+      <img id="gallery-item-photo" src="" alt="">
+      <div class="gallery-item-text">
+        <p class="gallery-item-note" id="gallery-item-note"></p>
+        <p class="gallery-item-date" id="gallery-item-date"></p>
+      </div>
     </div>
+  </div>
+
+  <!-- ── CARS PAGE ── -->
+  <div id="page-cars" class="page">
+    <div class="cars-list" id="cars-list"></div>
+  </div>
+
+  <!-- ── CAR ITEM PAGE ── -->
+  <div id="page-car-item" class="page">
+    <a class="article-back" href="#" onclick="showPage('cars')">← 돌아가기</a>
+    <div class="article-header">
+      <h1 class="article-title" id="car-item-title"></h1>
+      <p class="article-date" id="car-item-date"></p>
+    </div>
+    <div class="car-photos" id="car-item-photos"></div>
+    <div class="car-body" id="car-item-body"></div>
   </div>
 
   <!-- ── GUESTBOOK PAGE ── -->
@@ -531,6 +620,71 @@
 </div>
 
 <script>
+  const carsData = [
+    {
+      title: 'BMW 3 Series',
+      date: '2025. 09',
+      photos: ['photos/car1.jpeg'],
+      body: '<p>여기에 차에 대한 기록을 적어주세요.</p>'
+    },
+    {
+      title: 'Porsche 911',
+      date: '2025. 08',
+      photos: ['photos/car2.jpeg'],
+      body: '<p>여기에 차에 대한 기록을 적어주세요.</p>'
+    }
+  ];
+
+  function renderCars() {
+    const el = document.getElementById('cars-list');
+    el.innerHTML = carsData.map((c, i) => `
+      <div class="car-row" onclick="showCarItem(${i})">
+        ${c.photos[0]
+          ? `<img class="car-thumb" src="${c.photos[0]}" alt="" onerror="this.outerHTML='<div class=car-thumb-empty></div>'">`
+          : '<div class="car-thumb-empty"></div>'}
+        <span class="car-title">${c.title}</span>
+        <span class="car-date">${c.date}</span>
+      </div>`).join('');
+  }
+
+  function showCarItem(i) {
+    const c = carsData[i];
+    document.getElementById('car-item-title').textContent = c.title;
+    document.getElementById('car-item-date').textContent = c.date;
+    document.getElementById('car-item-photos').innerHTML = c.photos.map(p => `<img src="${p}" alt="">`).join('');
+    document.getElementById('car-item-body').innerHTML = c.body;
+    showPage('car-item');
+  }
+
+  const galleryData = [
+    {
+      photo: 'photos/1.jpeg',
+      note: '여기에 사진에 대한 글을 적어주세요.',
+      date: '2025. 09'
+    },
+    {
+      photo: 'photos/2.jpeg',
+      note: '또 다른 사진에 대한 글.',
+      date: '2025. 09'
+    }
+  ];
+
+  function renderGallery() {
+    const el = document.getElementById('gallery-grid');
+    el.innerHTML = galleryData.map((g, i) => `
+      <div class="gallery-photo" onclick="showGalleryItem(${i})">
+        <img src="${g.photo}" alt="">
+      </div>`).join('');
+  }
+
+  function showGalleryItem(i) {
+    const g = galleryData[i];
+    document.getElementById('gallery-item-photo').src = g.photo;
+    document.getElementById('gallery-item-note').textContent = g.note;
+    document.getElementById('gallery-item-date').textContent = g.date;
+    showPage('gallery-item');
+  }
+
   const quotesData = [
     {
       book: '싯다르타',
@@ -640,7 +794,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', guestbook: 'nav-guestbook' };
+    const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', cars: 'nav-cars', 'car-item': 'nav-cars', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     location.hash = name === 'home' ? '' : name;
@@ -678,12 +832,16 @@
 
   renderHomeRecent();
   renderThoughts();
+  renderGallery();
+  renderCars();
   renderQuotesPage();
 
   const hash = location.hash.replace('#', '');
   if (hash === 'thoughts') showPage('thoughts');
   else if (hash === 'quotes') showPage('quotes');
   else if (hash === 'gallery') showPage('gallery');
+  else if (hash === 'gallery-item') showPage('gallery');
+  else if (hash === 'cars') showPage('cars');
   else if (hash === 'guestbook') showPage('guestbook');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
