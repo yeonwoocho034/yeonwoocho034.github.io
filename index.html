@@ -437,20 +437,7 @@
       <a class="section-more" href="#" onclick="showPage('quotes')">전체 →</a>
     </div>
 
-    <div class="quotes">
-      <div class="quote">
-        <p class="q-text">우리는 언제나 우리가 읽은 것으로 만들어진다.</p>
-        <p class="q-src">작가 — 책 제목</p>
-      </div>
-      <div class="quote">
-        <p class="q-text">모든 끝은 또 다른 시작의 다른 이름이다.</p>
-        <p class="q-src">작가 — 책 제목</p>
-      </div>
-      <div class="quote">
-        <p class="q-text">침묵에도 무게가 있고, 그 무게는 때로 말보다 무겁다.</p>
-        <p class="q-src">작가 — 책 제목</p>
-      </div>
-    </div>
+    <div class="quotes" id="home-quotes"></div>
 
     <div class="guestbook-bar">
       <span class="gb-left">흔적을 남겨주세요</span>
@@ -471,29 +458,7 @@
 
   <!-- ── QUOTES PAGE ── -->
   <div id="page-quotes" class="page">
-    <div style="border-top:1px solid var(--border);">
-      <div class="accordion-item">
-        <div class="accordion-head" onclick="toggleAcc(this)">싯다르타 <span class="acc-arr">›</span></div>
-        <div class="accordion-body">
-          <p class="q-text">지식은 전달할 수 있지만 지혜는 전달할 수 없다.</p>
-          <p class="q-text">나는 기다릴 수 있고, 생각할 수 있고, 단식할 수 있다.</p>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <div class="accordion-head" onclick="toggleAcc(this)">불안의 서 <span class="acc-arr">›</span></div>
-        <div class="accordion-body">
-          <p class="q-text">나는 꿈꾸는 것 외에 아무것도 아니다.</p>
-          <p class="q-text">모든 것이 나에게는 낯설다, 심지어 나 자신도.</p>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <div class="accordion-head" onclick="toggleAcc(this)">시지프 신화 <span class="acc-arr">›</span></div>
-        <div class="accordion-body">
-          <p class="q-text">우리는 시지프를 행복한 인간으로 상상해야 한다.</p>
-          <p class="q-text">부조리는 인간의 부름과 세계의 불합리한 침묵 사이에서 태어난다.</p>
-        </div>
-      </div>
-    </div>
+    <div id="quotes-accordion" style="border-top:1px solid var(--border);"></div>
   </div>
 
   <!-- ── GUESTBOOK PAGE ── -->
@@ -511,6 +476,52 @@
 </div>
 
 <script>
+  const quotesData = [
+    {
+      book: '싯다르타',
+      quotes: [
+        '지식은 전달할 수 있지만 지혜는 전달할 수 없다.',
+        '나는 기다릴 수 있고, 생각할 수 있고, 단식할 수 있다.'
+      ]
+    },
+    {
+      book: '불안의 서',
+      quotes: [
+        '나는 꿈꾸는 것 외에 아무것도 아니다.',
+        '모든 것이 나에게는 낯설다, 심지어 나 자신도.'
+      ]
+    },
+    {
+      book: '시지프 신화',
+      quotes: [
+        '우리는 시지프를 행복한 인간으로 상상해야 한다.',
+        '부조리는 인간의 부름과 세계의 불합리한 침묵 사이에서 태어난다.'
+      ]
+    }
+  ];
+
+  function renderHomeQuotes() {
+    const el = document.getElementById('home-quotes');
+    const flat = quotesData.flatMap(b => b.quotes.map(q => ({ q, book: b.book })));
+    const picks = flat.slice(0, 3);
+    el.innerHTML = picks.map(p => `
+      <div class="quote">
+        <p class="q-text">${p.q}</p>
+        <p class="q-src">${p.book}</p>
+      </div>`).join('');
+  }
+
+  function renderQuotesPage() {
+    const el = document.getElementById('quotes-accordion');
+    el.innerHTML = quotesData.map(b => `
+      <div class="accordion-item">
+        <div class="accordion-head" onclick="toggleAcc(this)">${b.book} <span class="acc-arr">›</span></div>
+        <div class="accordion-body">
+          ${b.quotes.map(q => `<p class="q-text">${q}</p>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+
   const articles = {
     1: {
       num: '001',
@@ -600,12 +611,15 @@
     renderGuestbook();
   }
 
+  renderHomeQuotes();
+  renderQuotesPage();
+
   const hash = location.hash.replace('#', '');
   if (hash === 'quotes') showPage('quotes');
   else if (hash === 'guestbook') showPage('guestbook');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
-
+  
   function toggleAcc(el) {
     el.classList.toggle('open');
     el.nextElementSibling.classList.toggle('open');
