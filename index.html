@@ -494,15 +494,15 @@
     .tea-body p { margin-bottom: 1.4rem; }
 
     /* ── RECENT ── */
-    .recent-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: 0.8rem; }
+    .recent-label { font-size: 13px; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: 0.8rem; }
     .recent-row {
       display: flex; justify-content: space-between; align-items: baseline;
       padding: 0.8rem 0; border-bottom: 1px solid var(--border);
       cursor: pointer;
     }
     .recent-row:hover .recent-title { opacity: 0.5; }
-    .recent-title { font-size: 12px; font-weight: 300; color: var(--text); transition: opacity 0.15s; }
-    .recent-date { font-size: 10px; color: var(--text-faint); }
+    .recent-title { font-size: 13px; font-weight: 300; color: var(--text); transition: opacity 0.15s; }
+    .recent-date { font-size: 12px; color: var(--text-faint); }
 
     /* ── THOUGHTS LIST ── */
     .thoughts-list { border-top: 1px solid var(--border); }
@@ -577,15 +577,34 @@
     }
     .fade-up { opacity: 0; animation: fadeUp 0.4s ease forwards; }
     .fade-in { opacity: 0; animation: fadeIn 0.4s ease forwards; }
+    /* ── GALLERY SORT ── */
+    .gallery-sort {
+      display: flex;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .sort-btn {
+      font-family: 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', sans-serif;
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--text-faint);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .sort-btn.active { color: var(--text); }
+    .sort-btn:hover { color: var(--text-muted); }
   </style>
 </head>
 <body>
 <div class="wrap">
 
   <nav>
-    <a class="site-name" href="#" onclick="showPage('home')">home</a>
+    <a class="site-name" href="#" onclick="showPage('home')">Yeonwoo Cho</a>
     <ul class="nav-links">
-      <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">home</a></li>
       <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
       <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
       <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
@@ -643,6 +662,10 @@
 
   <!-- ── GALLERY PAGE ── -->
   <div id="page-gallery" class="page">
+    <div class="gallery-sort">
+      <button class="sort-btn active" id="sort-recent" onclick="setGallerySort('recent')">최근 추가순</button>
+      <button class="sort-btn" id="sort-oldest" onclick="setGallerySort('oldest')">오래된순</button>
+    </div>
     <div class="gallery" id="gallery-grid"></div>
   </div>
 
@@ -732,20 +755,37 @@
   const galleryData = [
     {
       photo: 'photos/1.jpeg',
-      note: '여기에 사진에 대한 글을 적어주세요.',
-      date: '2025. 09'
+      note: '한남동 뒷골목',
+      date: 'Mar 8, 2026'
     },
     {
       photo: 'photos/2.jpeg',
-      note: '또 다른 사진에 대한 글.',
-      date: '2025. 09'
+      note: 'Estelle 언니랑 Goldstein Reserve에서. 맨발 토스트!',
+      date: 'Jan 4, 2026'
+    }
+    {
+      photo: 'photos/3.jpeg',
+      note: 'Coogie Beach, Sydney. Wylie's Baths.',
+      date: 'Jan 4, 2026'
     }
   ];
 
+  let gallerySortMode = 'recent';
+
+  function setGallerySort(mode) {
+    gallerySortMode = mode;
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('sort-' + mode).classList.add('active');
+    renderGallery();
+  }
+
   function renderGallery() {
     const el = document.getElementById('gallery-grid');
-    const reversed = [...galleryData].map((g, i) => ({ ...g, i })).reverse();
-    el.innerHTML = reversed.map((g, idx) => `
+    let items = galleryData.map((g, i) => ({ ...g, i }));
+    if (gallerySortMode === 'recent') {
+      items = items.reverse();
+    }
+    el.innerHTML = items.map((g, idx) => `
       <div class="gallery-photo fade-in" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showGalleryItem(${g.i})">
         <img src="${g.photo}" alt="">
       </div>`).join('');
@@ -756,6 +796,11 @@
     document.getElementById('gallery-item-photo').src = g.photo;
     document.getElementById('gallery-item-note').textContent = g.note;
     document.getElementById('gallery-item-date').textContent = g.date;
+    const prev = galleryData[i+1];
+    const next = galleryData[i-1];
+    document.getElementById('gallery-item-nav').innerHTML =
+      `<span>${prev ? `<a onclick="showGalleryItem(${i+1})">← 이전</a>` : ''}</span>` +
+      `<span>${next ? `<a onclick="showGalleryItem(${i-1})">다음 →</a>` : ''}</span>`;
     showPage('gallery-item');
   }
 
