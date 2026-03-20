@@ -391,6 +391,43 @@
       border-bottom: 1px solid var(--border);
     }
     .accordion-body .q-text:last-child { border-bottom: none; }
+    .accordion-body .q-text { margin-bottom: 0; }
+
+    /* ── COLLAGE ── */
+    .collage {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 200px 130px;
+      gap: 4px;
+      margin-bottom: 2.5rem;
+    }
+    .photo { background: var(--border); overflow: hidden; }
+    .photo-big { grid-row: 1 / 3; }
+    .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo.empty { background: var(--border); }
+
+    /* ── RECENT ── */
+    .recent-label { font-size: 9px; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: 0.8rem; }
+    .recent-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 0.8rem 0; border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .recent-row:hover .recent-title { opacity: 0.5; }
+    .recent-title { font-size: 12px; font-weight: 300; color: var(--text); transition: opacity 0.15s; }
+    .recent-date { font-size: 10px; color: var(--text-faint); }
+
+    /* ── THOUGHTS LIST ── */
+    .thoughts-list { border-top: 1px solid var(--border); }
+    .thought-row {
+      display: flex; align-items: baseline; gap: 1rem;
+      padding: 1rem 0; border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .thought-row:hover .thought-title { opacity: 0.5; }
+    .thought-num { font-size: 10px; color: var(--g); letter-spacing: 0.06em; flex-shrink: 0; }
+    .thought-title { font-size: 14px; font-weight: 300; color: var(--text); flex: 1; transition: opacity 0.15s; }
+    .thought-date { font-size: 10px; color: var(--text-faint); flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -399,7 +436,8 @@
   <nav>
     <a class="site-name" href="#" onclick="showPage('home')">Yeonwoo Cho</a>
     <ul class="nav-links">
-      <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">thoughts</a></li>
+      <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">home</a></li>
+      <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
       <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
       <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
     </ul>
@@ -412,48 +450,30 @@
 
   <!-- ── HOME ── -->
   <div id="page-home" class="page active">
-    <div class="grid">
-      <div class="main-post" onclick="showArticle(3)">
-        <p class="post-num">003</p>
-        <h2 class="post-title">낯섦에 대하여</h2>
-        <p class="post-body">어떤 것들은 처음 보는 순간부터 낯설다. 그 낯섦이 거부감이 아니라 끌림으로 느껴질 때, 우리는 그것을 아름답다고 부른다.</p>
-      </div>
-      <div class="side-posts">
-        <div class="side-post" onclick="showArticle(2)">
-          <p class="post-num">002</p>
-          <h3 class="post-title-sm">언어가 닿지 않는 곳</h3>
-          <p class="post-date">2025. 08</p>
-        </div>
-        <div class="side-post" onclick="showArticle(1)">
-          <p class="post-num">001</p>
-          <h3 class="post-title-sm">처음 쓰는 일에 대해</h3>
-          <p class="post-date">2025. 07</p>
-        </div>
-      </div>
+    <div class="collage">
+      <div class="photo photo-big"><img src="photos/1.jpeg" alt="" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo"><img src="photos/2.jpg" alt="" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo"><img src="photos/3.jpg" alt="" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo"><img src="photos/4.jpg" alt="" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo"><img src="photos/5.jpg" alt="" onerror="this.parentElement.classList.add('empty')"></div>
     </div>
-
-    <div class="section-line">
-      <span class="section-label">구절</span>
-      <a class="section-more" href="#" onclick="showPage('quotes')">전체 →</a>
-    </div>
-
-    <div class="quotes" id="home-quotes"></div>
-
-    <div class="guestbook-bar">
-      <span class="gb-left">흔적을 남겨주세요</span>
-      <a class="gb-link" href="#" onclick="showPage('guestbook')">방명록 →</a>
-    </div>
+    <div id="home-recent"></div>
   </div>
 
   <!-- ── ARTICLE ── -->
   <div id="page-article" class="page">
-    <a class="article-back" href="#" onclick="showPage('home')">← 돌아가기</a>
+    <a class="article-back" href="#" onclick="showPage('thoughts')">← 돌아가기</a>
     <div class="article-header">
       <p class="article-num" id="article-num"></p>
       <h1 class="article-title" id="article-title"></h1>
       <p class="article-date" id="article-date"></p>
     </div>
     <div class="article-body" id="article-body"></div>
+  </div>
+
+  <!-- ── THOUGHTS PAGE ── -->
+  <div id="page-thoughts" class="page">
+    <div class="thoughts-list" id="thoughts-list"></div>
   </div>
 
   <!-- ── QUOTES PAGE ── -->
@@ -500,14 +520,24 @@
     }
   ];
 
-  function renderHomeQuotes() {
-    const el = document.getElementById('home-quotes');
-    const flat = quotesData.flatMap(b => b.quotes.map(q => ({ q, book: b.book })));
-    const picks = flat.slice(0, 3);
-    el.innerHTML = picks.map(p => `
-      <div class="quote">
-        <p class="q-text">${p.q}</p>
-        <p class="q-src">${p.book}</p>
+  function renderHomeRecent() {
+    const el = document.getElementById('home-recent');
+    const sorted = Object.entries(articles).sort((a,b) => b[0]-a[0]).slice(0, 3);
+    el.innerHTML = `<p class="recent-label">최근 글</p>` + sorted.map(([id, a]) => `
+      <div class="recent-row" onclick="showArticle(${id})">
+        <span class="recent-title">${a.title}</span>
+        <span class="recent-date">${a.date}</span>
+      </div>`).join('');
+  }
+
+  function renderThoughts() {
+    const el = document.getElementById('thoughts-list');
+    const sorted = Object.entries(articles).sort((a,b) => b[0]-a[0]);
+    el.innerHTML = sorted.map(([id, a]) => `
+      <div class="thought-row" onclick="showArticle(${id})">
+        <span class="thought-num">${a.num}</span>
+        <span class="thought-title">${a.title}</span>
+        <span class="thought-date">${a.date}</span>
       </div>`).join('');
   }
 
@@ -575,7 +605,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { home: 'nav-home', quotes: 'nav-quotes', guestbook: 'nav-guestbook' };
+    const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     location.hash = name === 'home' ? '' : name;
@@ -611,11 +641,13 @@
     renderGuestbook();
   }
 
-  renderHomeQuotes();
+  renderHomeRecent();
+  renderThoughts();
   renderQuotesPage();
 
   const hash = location.hash.replace('#', '');
-  if (hash === 'quotes') showPage('quotes');
+  if (hash === 'thoughts') showPage('thoughts');
+  else if (hash === 'quotes') showPage('quotes');
   else if (hash === 'guestbook') showPage('guestbook');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
