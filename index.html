@@ -401,6 +401,7 @@
       margin-bottom: 2.5rem;
       border-bottom: 1px solid var(--border);
       padding-bottom: 2.5rem;
+      align-items: end;
     }
     .showcase-photo img { width: 100%; height: auto; display: block; }
     .showcase-text {
@@ -413,8 +414,9 @@
       font-weight: 300;
       line-height: 1.9;
       color: var(--text-muted);
+      margin-bottom: auto;
     }
-    .showcase-spotify { margin-top: 2rem; }
+    .showcase-spotify { margin-top: 1.5rem; flex-shrink: 0; }
     .showcase-date {
       font-size: 13px;
       color: var(--text-faint);
@@ -515,6 +517,23 @@
     .thought-num { font-size: 10px; color: var(--g); letter-spacing: 0.06em; flex-shrink: 0; }
     .thought-title { font-size: 14px; font-weight: 300; color: var(--text); flex: 1; transition: opacity 0.15s; }
     .thought-date { font-size: 10px; color: var(--text-faint); flex-shrink: 0; }
+    /* ── FADE IN ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.4s ease forwards;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.4s ease forwards;
+    }
   </style>
 </head>
 <body>
@@ -642,7 +661,7 @@
   function renderTea() {
     const el = document.getElementById('tea-list');
     el.innerHTML = teaData.map((c, i) => `
-      <div class="tea-row" onclick="showTeaItem(${i})">
+      <div class="tea-row fade-up" style="animation-delay:${i*0.08}s" onclick="showTeaItem(${i})">
         ${c.photos[0]
           ? `<img class="tea-thumb" src="${c.photos[0]}" alt="" onerror="this.outerHTML='<div class=car-thumb-empty></div>'">`
           : '<div class="tea-thumb-empty"></div>'}
@@ -726,8 +745,8 @@
   function renderThoughts() {
     const el = document.getElementById('thoughts-list');
     const sorted = Object.entries(articles).sort((a,b) => b[0]-a[0]);
-    el.innerHTML = sorted.map(([id, a]) => `
-      <div class="thought-row" onclick="showArticle(${id})">
+    el.innerHTML = sorted.map(([id, a], i) => `
+      <div class="thought-row fade-up" style="animation-delay:${i*0.08}s" onclick="showArticle(${id})">
         <span class="thought-num">${a.num}</span>
         <span class="thought-title">${a.title}</span>
         <span class="thought-date">${a.date}</span>
@@ -736,8 +755,8 @@
 
   function renderQuotesPage() {
     const el = document.getElementById('quotes-accordion');
-    el.innerHTML = quotesData.map(b => `
-      <div class="accordion-item">
+    el.innerHTML = quotesData.map((b, i) => `
+      <div class="accordion-item fade-up" style="animation-delay:${i*0.08}s">
         <div class="accordion-head" onclick="toggleAcc(this)">${b.book} <span class="acc-arr">›</span></div>
         <div class="accordion-body">
           ${b.quotes.map(q => `<p class="q-text">${q}</p>`).join('')}
@@ -784,7 +803,7 @@
     const list = document.getElementById('gb-list');
     const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
     list.innerHTML = entries.map((e, i) => `
-      <div class="gb-entry">
+      <div class="gb-entry fade-up" style="animation-delay:${i*0.08}s">
         <p class="gb-entry-name">${e.name}${adminMode ? ` <span onclick="deleteEntry(${i})" style="cursor:pointer;font-size:10px;color:#aaa;margin-left:8px;">삭제</span>` : ''}</p>
         <p class="gb-entry-msg">${e.msg}</p>
         <p class="gb-entry-date">${e.date}</p>
@@ -807,6 +826,10 @@
     const navMap = { home: 'nav-home', thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
+    if (name === 'thoughts') renderThoughts();
+    if (name === 'quotes') renderQuotesPage();
+    if (name === 'gallery') renderGallery();
+    if (name === 'tea') renderTea();
     location.hash = name === 'home' ? '' : name;
     window.scrollTo(0, 0);
     return false;
