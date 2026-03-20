@@ -528,15 +528,32 @@
     }
   };
 
+  let adminMode = false;
+
+  function toggleAdmin() {
+    const pw = prompt('비밀번호');
+    if (pw === '0304') { adminMode = true; renderGuestbook(); }
+  }
+
+  function deleteEntry(idx) {
+    const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
+    entries.splice(idx, 1);
+    localStorage.setItem('gb-entries', JSON.stringify(entries));
+    renderGuestbook();
+  }
+
   function renderGuestbook() {
     const list = document.getElementById('gb-list');
     const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
-    list.innerHTML = entries.map(e => `
+    list.innerHTML = entries.map((e, i) => `
       <div class="gb-entry">
-        <p class="gb-entry-name">${e.name}</p>
+        <p class="gb-entry-name">${e.name}${adminMode ? ` <span onclick="deleteEntry(${i})" style="cursor:pointer;font-size:10px;color:#aaa;margin-left:8px;">삭제</span>` : ''}</p>
         <p class="gb-entry-msg">${e.msg}</p>
         <p class="gb-entry-date">${e.date}</p>
       </div>`).join('');
+    if (!adminMode) {
+      list.innerHTML += `<p onclick="toggleAdmin()" style="font-size:10px;color:var(--text-faint);cursor:pointer;padding:1rem 0;">관리</p>`;
+    }
   }
 
   function showPage(name) {
