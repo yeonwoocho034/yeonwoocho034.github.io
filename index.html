@@ -406,8 +406,8 @@
   </nav>
 
   <div class="hero">
-    <h1>Yeonwoo <br>Cho</h1>
-    <p class="hero-sub">비정기 발행</p>
+    <h1>Persoanl<br>Blog<br>by Yeonwoo Cho</h1>
+    <p class="hero-sub">하이 헬로/p>
   </div>
 
   <!-- ── HOME ── -->
@@ -493,18 +493,14 @@
 
   <!-- ── GUESTBOOK PAGE ── -->
   <div id="page-guestbook" class="page">
-    <div class="guestbook-list" id="gb-list">
-      <div class="gb-entry">
-        <p class="gb-entry-name">방문자</p>
-        <p class="gb-entry-msg">좋은 글 잘 읽었습니다.</p>
-        <p class="gb-entry-date">2025. 09. 01</p>
-      </div>
-    </div>
-    <div class="gb-form">
-      <input type="text" id="gb-name" placeholder="이름" maxlength="20">
-      <textarea id="gb-msg" placeholder="한 마디 남겨주세요" rows="3"></textarea>
-      <button class="gb-submit" onclick="submitGuestbook()">남기기 →</button>
-    </div>
+    <div id="gb-success" style="display:none; padding: 1.5rem 0; font-size:12px; color:var(--g); letter-spacing:0.04em;">남겨주셔서 감사해요 →</div>
+    <form class="gb-form" name="guestbook" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleGbSubmit(event)">
+      <input type="hidden" name="form-name" value="guestbook">
+      <input type="hidden" name="bot-field" style="display:none">
+      <input type="text" name="name" id="gb-name" placeholder="이름" maxlength="20" required>
+      <textarea name="message" id="gb-msg" placeholder="한 마디 남겨주세요" rows="3" required></textarea>
+      <button type="submit" class="gb-submit">남기기 →</button>
+    </form>
   </div>
 
 </div>
@@ -550,21 +546,15 @@
     showPage('article');
   }
 
-  function submitGuestbook() {
-    const name = document.getElementById('gb-name').value.trim();
-    const msg = document.getElementById('gb-msg').value.trim();
-    if (!name || !msg) return;
-
-    const today = new Date();
-    const dateStr = `${today.getFullYear()}. ${String(today.getMonth()+1).padStart(2,'0')}. ${String(today.getDate()).padStart(2,'0')}`;
-
-    const entry = document.createElement('div');
-    entry.className = 'gb-entry';
-    entry.innerHTML = `<p class="gb-entry-name">${name}</p><p class="gb-entry-msg">${msg}</p><p class="gb-entry-date">${dateStr}</p>`;
-    document.getElementById('gb-list').appendChild(entry);
-
-    document.getElementById('gb-name').value = '';
-    document.getElementById('gb-msg').value = '';
+  function handleGbSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    }).then(() => {
+      form.style.display = 'none';
+      document.getElementById('gb-success').style.display = 'block';
+    }).catch(() => alert('오류가 발생했어요. 다시 시도해주세요.'));
   }
 </script>
 </body>
