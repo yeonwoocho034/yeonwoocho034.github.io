@@ -577,11 +577,12 @@
     }
     .fade-up { opacity: 0; animation: fadeUp 0.4s ease forwards; }
     .fade-in { opacity: 0; animation: fadeIn 0.4s ease forwards; }
+    
     /* ── GALLERY SORT ── */
     .gallery-sort { display: flex; gap: 1.2rem; margin-bottom: 1.2rem; }
     .sort-btn {
       font-family: 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', sans-serif;
-      font-size: 10px; font-weight: 300; letter-spacing: 0.06em;
+      font-size: 14px; font-weight: 300; letter-spacing: 0.06em;
       color: var(--text-faint); background: none; border: none;
       cursor: pointer; padding: 0; transition: color 0.15s;
     }
@@ -593,7 +594,7 @@
 <div class="wrap">
 
   <nav>
-    <a class="site-name" href="#" onclick="showPage('home')">Yeonwoo Cho</a>
+    <a class="site-name" href="#" onclick="showPage('home')">home</a>
     <ul class="nav-links">
       <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
       <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
@@ -653,8 +654,8 @@
   <!-- ── GALLERY PAGE ── -->
   <div id="page-gallery" class="page">
     <div class="gallery-sort">
-      <button class="sort-btn active" id="sort-recent" onclick="setGallerySort('recent')">최근 추가순</button>
-      <button class="sort-btn" id="sort-oldest" onclick="setGallerySort('oldest')">오래된순</button>
+      <button class="sort-btn active" id="sort-recent" onclick="setGallerySort('recent')">최근 추가 순</button>
+      <button class="sort-btn" id="sort-oldest" onclick="setGallerySort('oldest')">오래된 순</button>
     </div>
     <div class="gallery" id="gallery-grid"></div>
   </div>
