@@ -378,8 +378,15 @@
       .showcase {
         grid-template-columns: 1fr;
         gap: 1.2rem;
+        align-items: start;
       }
-      .showcase-text { justify-content: flex-start; }
+      .showcase-text {
+        justify-content: flex-start;
+        order: 2;
+      }
+      .showcase-photo { order: 1; }
+      .showcase-note { margin-bottom: 0; }
+      .showcase-spotify { margin-top: 1rem; }
 
       /* GRID */
       .grid { grid-template-columns: 1fr; }
