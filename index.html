@@ -35,11 +35,24 @@
     }
 
     /* ── NAV ── */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+    .header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: end;
       margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+    nav {
+      display: contents;
     }
 
     .site-name {
@@ -70,9 +83,8 @@
 
     /* ── HERO ── */
     .hero {
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      padding-bottom: 0;
     }
 
     .hero h1 {
@@ -362,12 +374,21 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      /* NAV */
-      nav { align-items: flex-start; }
+      /* HEADER */
+      .header {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .header-right {
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+      }
       .nav-links {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 0.6rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.8rem;
       }
 
       /* HERO */
@@ -459,7 +480,7 @@
     .gallery-wrap {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
+      gap: 1.5rem;
       align-items: start;
     }
     .gallery {
@@ -656,20 +677,23 @@
 <body>
 <div class="wrap">
 
-  <nav>
-    <a class="site-name" href="#" onclick="showPage('home')">home</a>
-    <ul class="nav-links">
-      <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
-      <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
-      <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
-      <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
-      <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
-    </ul>
-  </nav>
-
-  <div class="hero">
-    <h1>i'm<br>that<br>sisyphus</h1>
+  <div class="header">
+    <div class="hero">
+      <h1>i'm<br>that<br>sisyphus</h1>
       <p class="hero-sub">a very personal documentation</p>
+    </div>
+    <div class="header-right">
+      <a class="site-name" href="#" onclick="showPage('home')">home</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
+          <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
+          <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
+          <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
+          <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
+        </ul>
+      </nav>
+    </div>
   </div>
 
   <!-- ── HOME ── -->
