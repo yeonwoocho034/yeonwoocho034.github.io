@@ -35,12 +35,17 @@
     }
 
     /* ── NAV ── */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
+    .site-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
     }
+    .site-header-left { display: flex; flex-direction: column; justify-content: flex-end; }
+    .site-header-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; }
+    nav { display: contents; }
 
     .site-name {
       font-size: 14px;
@@ -56,6 +61,7 @@
       align-items: flex-end;
       gap: 0.3rem;
       list-style: none;
+      margin-top: auto;
     }
 
     .nav-links a {
@@ -71,11 +77,7 @@
     .nav-links a.active { color: var(--text); }
 
     /* ── HERO ── */
-    .hero {
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
-    }
+    .hero { margin-top: auto; }
 
     .hero h1 {
       font-size: 42px;
@@ -364,12 +366,10 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      /* NAV */
-      .nav-links {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 0.3rem;
-      }
+      /* HEADER */
+      .site-header { grid-template-columns: 1fr; gap: 1rem; }
+      .site-header-right { align-items: flex-start; margin-top: 0.5rem; }
+      .nav-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 0.6rem; }
 
       /* HERO */
       .hero h1 { font-size: 32px; }
@@ -459,7 +459,7 @@
     /* ── GALLERY ── */
     .gallery-wrap {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 2.5fr;
       gap: 1.5rem;
       align-items: start;
     }
@@ -652,25 +652,117 @@
     }
     .sort-btn.active { color: var(--text); }
     .sort-btn:hover { color: var(--text-muted); }
+    /* ── MAGAZINE ── */
+    .magazine-outer {
+      overflow: hidden;
+      width: 100%;
+    }
+    .magazine-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .magazine-spread {
+      min-width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 70vh;
+      border-bottom: 1px solid var(--border);
+    }
+    .magazine-spread-left {
+      padding: 2rem 2rem 2rem 0;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .magazine-spread-right {
+      padding: 2rem 0 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .magazine-spread-right img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .magazine-issue {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--text-faint);
+      margin-bottom: 1.5rem;
+    }
+    .magazine-title {
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .magazine-body {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.9;
+      color: var(--text-muted);
+      flex: 1;
+    }
+    .magazine-caption {
+      font-size: 11px;
+      color: var(--text-faint);
+      text-align: right;
+    }
+    .magazine-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    .magazine-btn {
+      font-family: 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-faint);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+      letter-spacing: 0.04em;
+    }
+    .magazine-btn:hover { color: var(--text); }
+    .magazine-btn:disabled { opacity: 0.2; cursor: default; }
+    .magazine-page-num {
+      font-size: 10px;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+    }
   </style>
 </head>
 <body>
 <div class="wrap">
 
-  <nav>
-    <a class="site-name" href="#" onclick="showPage('home')">home</a>
-    <ul class="nav-links">
-      <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
-      <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
-      <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
-      <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
-      <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
-    </ul>
-  </nav>
-
-  <div class="hero">
-    <h1>i'm<br>that<br>sisyphus</h1>
-    <p class="hero-sub">a very personal documentation</p>
+  <div class="site-header">
+    <div class="site-header-left">
+      <a class="site-name" href="#" onclick="showPage('home')">home</a>
+      <div class="hero">
+        <h1>i'm<br>that<br>sisyphus</h1>
+        <p class="hero-sub">a very personal documentation</p>
+      </div>
+    </div>
+    <div class="site-header-right">
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
+          <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
+          <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
+          <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
+          <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
+          <li><a href="#" onclick="showPage('magazine')" id="nav-magazine">magazine</a></li>
+        </ul>
+      </nav>
+    </div>
   </div>
 
   <!-- ── HOME ── -->
@@ -747,6 +839,18 @@
     <div class="tea-photos" id="tea-item-photos"></div>
     <div class="tea-body" id="tea-item-body"></div>
     <div class="article-nav" id="tea-item-nav"></div>
+  </div>
+
+  <!-- ── MAGAZINE PAGE ── -->
+  <div id="page-magazine" class="page">
+    <div class="magazine-outer">
+      <div class="magazine-track" id="magazine-track"></div>
+    </div>
+    <div class="magazine-nav">
+      <button class="magazine-btn" id="mag-prev" onclick="magazineNav(-1)" disabled>← 이전</button>
+      <span class="magazine-page-num" id="mag-num">1 / 1</span>
+      <button class="magazine-btn" id="mag-next" onclick="magazineNav(1)">다음 →</button>
+    </div>
   </div>
 
   <!-- ── GUESTBOOK PAGE ── -->
@@ -880,6 +984,56 @@
     }
   ];
 
+  const magazineData = [
+    {
+      issue: '001',
+      title: '여기에 매거진 제목',
+      body: '여기에 글 내용을 적어주세요. 매거진 형태로 페이지를 넘겨가며 읽을 수 있습니다.',
+      photo: 'photos/1.jpeg',
+      caption: '사진 설명'
+    },
+    {
+      issue: '002',
+      title: '두 번째 이슈',
+      body: '두 번째 이슈의 글 내용입니다.',
+      photo: 'photos/2.jpeg',
+      caption: '사진 설명'
+    }
+  ];
+
+  let magazinePage = 0;
+
+  function renderMagazine() {
+    const track = document.getElementById('magazine-track');
+    track.innerHTML = magazineData.map((m, i) => `
+      <div class="magazine-spread">
+        <div class="magazine-spread-left">
+          <div>
+            <p class="magazine-issue">${m.issue}</p>
+            <h2 class="magazine-title">${m.title}</h2>
+          </div>
+          <p class="magazine-body">${m.body}</p>
+        </div>
+        <div class="magazine-spread-right">
+          <img src="${m.photo}" alt="">
+          <p class="magazine-caption">${m.caption}</p>
+        </div>
+      </div>`).join('');
+    updateMagazineNav();
+  }
+
+  function magazineNav(dir) {
+    magazinePage = Math.max(0, Math.min(magazineData.length - 1, magazinePage + dir));
+    document.getElementById('magazine-track').style.transform = `translateX(-${magazinePage * 100}%)`;
+    updateMagazineNav();
+  }
+
+  function updateMagazineNav() {
+    document.getElementById('mag-prev').disabled = magazinePage === 0;
+    document.getElementById('mag-next').disabled = magazinePage === magazineData.length - 1;
+    document.getElementById('mag-num').textContent = `${magazinePage + 1} / ${magazineData.length}`;
+  }
+
   function renderHomeRecent() {
     const el = document.getElementById('home-recent');
     const sorted = Object.entries(articles).sort((a,b) => b[0]-a[0]).slice(0, 3);
@@ -971,7 +1125,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
+    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook', magazine: 'nav-magazine' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     if (name === 'thoughts') renderThoughts();
@@ -1020,6 +1174,7 @@
   }
 
   renderHomeRecent();
+  renderMagazine();
   renderThoughts();
   renderGallery();
   renderTea();
@@ -1031,6 +1186,7 @@
   else if (hash === 'gallery') showPage('gallery');
   else if (hash === 'tea') showPage('tea');
   else if (hash === 'guestbook') showPage('guestbook');
+  else if (hash === 'magazine') showPage('magazine');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
   
