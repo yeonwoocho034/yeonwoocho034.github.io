@@ -35,24 +35,11 @@
     }
 
     /* ── NAV ── */
-    .header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: end;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: flex-end;
-      gap: 0.5rem;
-    }
     nav {
-      display: contents;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
     }
 
     .site-name {
@@ -65,7 +52,9 @@
 
     .nav-links {
       display: flex;
-      gap: 1.8rem;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.3rem;
       list-style: none;
     }
 
@@ -83,8 +72,9 @@
 
     /* ── HERO ── */
     .hero {
-      margin-bottom: 0;
-      padding-bottom: 0;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
     }
 
     .hero h1 {
@@ -374,21 +364,11 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      /* HEADER */
-      .header {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      .header-right {
-        align-items: flex-start;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.8rem;
-      }
+      /* NAV */
       .nav-links {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 0.8rem;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.3rem;
       }
 
       /* HERO */
@@ -677,23 +657,20 @@
 <body>
 <div class="wrap">
 
-  <div class="header">
-    <div class="hero">
-      <h1>i'm<br>that<br>sisyphus</h1>
-      <p class="hero-sub">a very personal documentation</p>
-    </div>
-    <div class="header-right">
-      <a class="site-name" href="#" onclick="showPage('home')">home</a>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
-          <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
-          <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
-          <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
-          <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
-        </ul>
-      </nav>
-    </div>
+  <nav>
+    <a class="site-name" href="#" onclick="showPage('home')">home</a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
+      <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
+      <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
+      <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
+      <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>i'm<br>that<br>sisyphus</h1>
+    <p class="hero-sub">a very personal documentation</p>
   </div>
 
   <!-- ── HOME ── -->
