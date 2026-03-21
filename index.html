@@ -35,17 +35,12 @@
     }
 
     /* ── NAV ── */
-    .site-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: end;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
     }
-    .site-header-left { display: flex; flex-direction: column; justify-content: flex-end; }
-    .site-header-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; }
-    nav { display: contents; }
 
     .site-name {
       font-size: 14px;
@@ -61,7 +56,6 @@
       align-items: flex-end;
       gap: 0.3rem;
       list-style: none;
-      margin-top: auto;
     }
 
     .nav-links a {
@@ -77,7 +71,11 @@
     .nav-links a.active { color: var(--text); }
 
     /* ── HERO ── */
-    .hero { margin-top: 2.5rem; }
+    .hero {
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
 
     .hero h1 {
       font-size: 42px;
@@ -85,12 +83,12 @@
       line-height: 1.15;
       letter-spacing: -0.02em;
       color: var(--g);
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
     .hero-sub {
-      font-size: 16px;
-      color: var(--text-faint);
+      font-size: 17px;
+      color: var(--text-muted);
       letter-spacing: 0.02em;
     }
 
@@ -366,10 +364,12 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
-      /* HEADER */
-      .site-header { grid-template-columns: 1fr; gap: 1rem; }
-      .site-header-right { align-items: flex-start; margin-top: 0.5rem; }
-      .nav-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 0.6rem; }
+      /* NAV */
+      .nav-links {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.3rem;
+      }
 
       /* HERO */
       .hero h1 { font-size: 32px; }
@@ -459,7 +459,7 @@
     /* ── GALLERY ── */
     .gallery-wrap {
       display: grid;
-      grid-template-columns: 1fr 2.5fr;
+      grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
       align-items: start;
     }
@@ -652,32 +652,25 @@
     }
     .sort-btn.active { color: var(--text); }
     .sort-btn:hover { color: var(--text-muted); }
-
   </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="site-header">
-    <div class="site-header-left">
-      <a class="site-name" href="#" onclick="showPage('home')">home</a>
-      <div class="hero">
-        <h1>i'm<br>that<br>sisyphus</h1>
-        <p class="hero-sub">a very personal documentation</p>
-      </div>
-    </div>
-    <div class="site-header-right">
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
-          <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
-          <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
-          <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
-          <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
-          <li><a href="#" onclick="showPage('archive')" id="nav-archive">archive</a></li>
-        </ul>
-      </nav>
-    </div>
+  <nav>
+    <a class="site-name" href="#" onclick="showPage('home')">home</a>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('thoughts')" id="nav-thoughts">thoughts</a></li>
+      <li><a href="#" onclick="showPage('quotes')" id="nav-quotes">quotes</a></li>
+      <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
+      <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
+      <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <h1>i'm<br>that<br>sisyphus</h1>
+    <p class="hero-sub">a very personal documentation</p>
   </div>
 
   <!-- ── HOME ── -->
@@ -754,35 +747,6 @@
     <div class="tea-photos" id="tea-item-photos"></div>
     <div class="tea-body" id="tea-item-body"></div>
     <div class="article-nav" id="tea-item-nav"></div>
-  </div>
-
-  <!-- ── ARCHIVE PAGE ── -->
-  <div id="page-archive" class="page">
-    <div class="gallery-sort" style="margin-bottom:1.2rem;">
-      <button class="sort-btn active" id="archive-sort-recent" onclick="setArchiveSort('recent')">최근 추가 순</button>
-      <button class="sort-btn" id="archive-sort-oldest" onclick="setArchiveSort('oldest')">오래된 순</button>
-    </div>
-    <div class="gallery-wrap">
-      <div class="gallery" id="archive-grid"></div>
-      <div class="gallery-panel" id="archive-panel">
-        <img class="gallery-panel-img" id="archive-panel-img" src="" alt="">
-        <p class="gallery-panel-note" id="archive-panel-note"></p>
-        <p class="gallery-panel-date" id="archive-panel-date"></p>
-        <span class="gallery-panel-close" onclick="closeArchivePanel()">닫기 ×</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── ARCHIVE ITEM PAGE ── -->
-  <div id="page-archive-item" class="page">
-    <a class="article-back" href="#" onclick="showPage('archive')">← 돌아가기</a>
-    <div class="gallery-item-layout" style="margin-top:2rem;">
-      <img id="archive-item-photo" src="" alt="">
-      <div class="gallery-item-text">
-        <p class="gallery-item-note" id="archive-item-note"></p>
-        <p class="gallery-item-date" id="archive-item-date"></p>
-      </div>
-    </div>
   </div>
 
   <!-- ── GUESTBOOK PAGE ── -->
@@ -916,54 +880,6 @@
     }
   ];
 
-  const archiveData = [
-    {
-      photo: 'photos/archive1.jpeg',
-      note: '여기에 사진 설명',
-      date: 'Mar 2026'
-    },
-    {
-      photo: 'photos/archive2.jpeg',
-      note: '또 다른 사진 설명',
-      date: 'Feb 2026'
-    }
-  ];
-
-  let archiveSortMode = 'recent';
-
-  function setArchiveSort(mode) {
-    archiveSortMode = mode;
-    document.querySelectorAll('[id^="archive-sort-"]').forEach(b => b.classList.remove('active'));
-    document.getElementById('archive-sort-' + mode).classList.add('active');
-    renderArchive();
-  }
-
-  function renderArchive() {
-    const el = document.getElementById('archive-grid');
-    let items = archiveData.map((g, i) => ({ ...g, i }));
-    if (archiveSortMode === 'recent') items = items.reverse();
-    el.innerHTML = items.map((g, idx) => `
-      <div class="gallery-photo fade-in" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showArchiveItem(${g.i})">
-        <img src="${g.photo}" alt="">
-      </div>`).join('');
-  }
-
-  function showArchiveItem(i) {
-    const g = archiveData[i];
-    document.getElementById('archive-panel-img').src = g.photo;
-    document.getElementById('archive-panel-note').textContent = g.note;
-    document.getElementById('archive-panel-date').textContent = g.date;
-    document.getElementById('archive-panel').classList.add('visible');
-    document.querySelectorAll('#archive-grid .gallery-photo').forEach((el, idx) => {
-      el.classList.toggle('selected', idx === i);
-    });
-  }
-
-  function closeArchivePanel() {
-    document.getElementById('archive-panel').classList.remove('visible');
-    document.querySelectorAll('#archive-grid .gallery-photo').forEach(el => el.classList.remove('selected'));
-  }
-
   function renderHomeRecent() {
     const el = document.getElementById('home-recent');
     const sorted = Object.entries(articles).sort((a,b) => b[0]-a[0]).slice(0, 3);
@@ -1055,13 +971,12 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook', archive: 'nav-archive', 'archive-item': 'nav-archive' };
+    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     if (name === 'thoughts') renderThoughts();
     if (name === 'quotes') renderQuotesPage();
     if (name === 'gallery') renderGallery();
-    if (name === 'archive') renderArchive();
     if (name === 'tea') renderTea();
     location.hash = name === 'home' ? '' : name;
     window.scrollTo(0, 0);
@@ -1105,7 +1020,6 @@
   }
 
   renderHomeRecent();
-  renderArchive();
   renderThoughts();
   renderGallery();
   renderTea();
@@ -1117,7 +1031,6 @@
   else if (hash === 'gallery') showPage('gallery');
   else if (hash === 'tea') showPage('tea');
   else if (hash === 'guestbook') showPage('guestbook');
-  else if (hash === 'archive') showPage('archive');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
   
