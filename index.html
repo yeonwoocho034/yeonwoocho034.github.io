@@ -975,7 +975,7 @@
     const msg = document.getElementById('gb-msg').value.trim();
     if (!name || !msg) return;
     const today = new Date();
-    const date = `${today.getFullYear()}. ${String(today.getMonth()+1).padStart(2,'0')}. ${String(today.getDate()).padStart(2,'0')}`;
+    const date = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
     entries.push({ name, msg, date });
     localStorage.setItem('gb-entries', JSON.stringify(entries));
