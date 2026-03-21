@@ -77,7 +77,7 @@
     .nav-links a.active { color: var(--text); }
 
     /* ── HERO ── */
-    .hero { margin-top: auto; }
+    .hero { margin-top: 2.5rem; }
 
     .hero h1 {
       font-size: 42px;
@@ -89,7 +89,7 @@
     }
 
     .hero-sub {
-      font-size: 17px;
+      font-size: 16px;
       color: var(--text-faint);
       letter-spacing: 0.02em;
     }
@@ -652,92 +652,7 @@
     }
     .sort-btn.active { color: var(--text); }
     .sort-btn:hover { color: var(--text-muted); }
-    /* ── MAGAZINE ── */
-    .magazine-outer {
-      overflow: hidden;
-      width: 100%;
-    }
-    .magazine-track {
-      display: flex;
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .magazine-spread {
-      min-width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 70vh;
-      border-bottom: 1px solid var(--border);
-    }
-    .magazine-spread-left {
-      padding: 2rem 2rem 2rem 0;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .magazine-spread-right {
-      padding: 2rem 0 2rem 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .magazine-spread-right img {
-      width: 100%;
-      height: auto;
-      display: block;
-      margin-bottom: 1rem;
-    }
-    .magazine-issue {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: var(--text-faint);
-      margin-bottom: 1.5rem;
-    }
-    .magazine-title {
-      font-size: 28px;
-      font-weight: 400;
-      line-height: 1.2;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      margin-bottom: 1rem;
-    }
-    .magazine-body {
-      font-size: 13px;
-      font-weight: 400;
-      line-height: 1.9;
-      color: var(--text-muted);
-      flex: 1;
-    }
-    .magazine-caption {
-      font-size: 11px;
-      color: var(--text-faint);
-      text-align: right;
-    }
-    .magazine-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-    }
-    .magazine-btn {
-      font-family: 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', sans-serif;
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--text-faint);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: color 0.15s;
-      letter-spacing: 0.04em;
-    }
-    .magazine-btn:hover { color: var(--text); }
-    .magazine-btn:disabled { opacity: 0.2; cursor: default; }
-    .magazine-page-num {
-      font-size: 10px;
-      color: var(--text-faint);
-      letter-spacing: 0.1em;
-    }
+
   </style>
 </head>
 <body>
@@ -759,7 +674,7 @@
           <li><a href="#" onclick="showPage('gallery')" id="nav-gallery">gallery</a></li>
           <li><a href="#" onclick="showPage('tea')" id="nav-tea">tea</a></li>
           <li><a href="#" onclick="showPage('guestbook')" id="nav-guestbook">방명록</a></li>
-          <li><a href="#" onclick="showPage('magazine')" id="nav-magazine">magazine</a></li>
+          <li><a href="#" onclick="showPage('archive')" id="nav-archive">archive</a></li>
         </ul>
       </nav>
     </div>
@@ -841,15 +756,32 @@
     <div class="article-nav" id="tea-item-nav"></div>
   </div>
 
-  <!-- ── MAGAZINE PAGE ── -->
-  <div id="page-magazine" class="page">
-    <div class="magazine-outer">
-      <div class="magazine-track" id="magazine-track"></div>
+  <!-- ── ARCHIVE PAGE ── -->
+  <div id="page-archive" class="page">
+    <div class="gallery-sort" style="margin-bottom:1.2rem;">
+      <button class="sort-btn active" id="archive-sort-recent" onclick="setArchiveSort('recent')">최근 추가 순</button>
+      <button class="sort-btn" id="archive-sort-oldest" onclick="setArchiveSort('oldest')">오래된 순</button>
     </div>
-    <div class="magazine-nav">
-      <button class="magazine-btn" id="mag-prev" onclick="magazineNav(-1)" disabled>← 이전</button>
-      <span class="magazine-page-num" id="mag-num">1 / 1</span>
-      <button class="magazine-btn" id="mag-next" onclick="magazineNav(1)">다음 →</button>
+    <div class="gallery-wrap">
+      <div class="gallery" id="archive-grid"></div>
+      <div class="gallery-panel" id="archive-panel">
+        <img class="gallery-panel-img" id="archive-panel-img" src="" alt="">
+        <p class="gallery-panel-note" id="archive-panel-note"></p>
+        <p class="gallery-panel-date" id="archive-panel-date"></p>
+        <span class="gallery-panel-close" onclick="closeArchivePanel()">닫기 ×</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ARCHIVE ITEM PAGE ── -->
+  <div id="page-archive-item" class="page">
+    <a class="article-back" href="#" onclick="showPage('archive')">← 돌아가기</a>
+    <div class="gallery-item-layout" style="margin-top:2rem;">
+      <img id="archive-item-photo" src="" alt="">
+      <div class="gallery-item-text">
+        <p class="gallery-item-note" id="archive-item-note"></p>
+        <p class="gallery-item-date" id="archive-item-date"></p>
+      </div>
     </div>
   </div>
 
@@ -984,54 +916,52 @@
     }
   ];
 
-  const magazineData = [
+  const archiveData = [
     {
-      issue: '001',
-      title: '여기에 매거진 제목',
-      body: '여기에 글 내용을 적어주세요. 매거진 형태로 페이지를 넘겨가며 읽을 수 있습니다.',
-      photo: 'photos/1.jpeg',
-      caption: '사진 설명'
+      photo: 'photos/archive1.jpeg',
+      note: '여기에 사진 설명',
+      date: 'Mar 2026'
     },
     {
-      issue: '002',
-      title: '두 번째 이슈',
-      body: '두 번째 이슈의 글 내용입니다.',
-      photo: 'photos/2.jpeg',
-      caption: '사진 설명'
+      photo: 'photos/archive2.jpeg',
+      note: '또 다른 사진 설명',
+      date: 'Feb 2026'
     }
   ];
 
-  let magazinePage = 0;
+  let archiveSortMode = 'recent';
 
-  function renderMagazine() {
-    const track = document.getElementById('magazine-track');
-    track.innerHTML = magazineData.map((m, i) => `
-      <div class="magazine-spread">
-        <div class="magazine-spread-left">
-          <div>
-            <p class="magazine-issue">${m.issue}</p>
-            <h2 class="magazine-title">${m.title}</h2>
-          </div>
-          <p class="magazine-body">${m.body}</p>
-        </div>
-        <div class="magazine-spread-right">
-          <img src="${m.photo}" alt="">
-          <p class="magazine-caption">${m.caption}</p>
-        </div>
+  function setArchiveSort(mode) {
+    archiveSortMode = mode;
+    document.querySelectorAll('[id^="archive-sort-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('archive-sort-' + mode).classList.add('active');
+    renderArchive();
+  }
+
+  function renderArchive() {
+    const el = document.getElementById('archive-grid');
+    let items = archiveData.map((g, i) => ({ ...g, i }));
+    if (archiveSortMode === 'recent') items = items.reverse();
+    el.innerHTML = items.map((g, idx) => `
+      <div class="gallery-photo fade-in" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showArchiveItem(${g.i})">
+        <img src="${g.photo}" alt="">
       </div>`).join('');
-    updateMagazineNav();
   }
 
-  function magazineNav(dir) {
-    magazinePage = Math.max(0, Math.min(magazineData.length - 1, magazinePage + dir));
-    document.getElementById('magazine-track').style.transform = `translateX(-${magazinePage * 100}%)`;
-    updateMagazineNav();
+  function showArchiveItem(i) {
+    const g = archiveData[i];
+    document.getElementById('archive-panel-img').src = g.photo;
+    document.getElementById('archive-panel-note').textContent = g.note;
+    document.getElementById('archive-panel-date').textContent = g.date;
+    document.getElementById('archive-panel').classList.add('visible');
+    document.querySelectorAll('#archive-grid .gallery-photo').forEach((el, idx) => {
+      el.classList.toggle('selected', idx === i);
+    });
   }
 
-  function updateMagazineNav() {
-    document.getElementById('mag-prev').disabled = magazinePage === 0;
-    document.getElementById('mag-next').disabled = magazinePage === magazineData.length - 1;
-    document.getElementById('mag-num').textContent = `${magazinePage + 1} / ${magazineData.length}`;
+  function closeArchivePanel() {
+    document.getElementById('archive-panel').classList.remove('visible');
+    document.querySelectorAll('#archive-grid .gallery-photo').forEach(el => el.classList.remove('selected'));
   }
 
   function renderHomeRecent() {
@@ -1125,12 +1055,13 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook', magazine: 'nav-magazine' };
+    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook', archive: 'nav-archive', 'archive-item': 'nav-archive' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     if (name === 'thoughts') renderThoughts();
     if (name === 'quotes') renderQuotesPage();
     if (name === 'gallery') renderGallery();
+    if (name === 'archive') renderArchive();
     if (name === 'tea') renderTea();
     location.hash = name === 'home' ? '' : name;
     window.scrollTo(0, 0);
@@ -1174,7 +1105,7 @@
   }
 
   renderHomeRecent();
-  renderMagazine();
+  renderArchive();
   renderThoughts();
   renderGallery();
   renderTea();
@@ -1186,7 +1117,7 @@
   else if (hash === 'gallery') showPage('gallery');
   else if (hash === 'tea') showPage('tea');
   else if (hash === 'guestbook') showPage('guestbook');
-  else if (hash === 'magazine') showPage('magazine');
+  else if (hash === 'archive') showPage('archive');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
   else showPage('home');
   
