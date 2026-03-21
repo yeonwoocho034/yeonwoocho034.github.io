@@ -22,7 +22,7 @@
 
     body {
       font-family: 'Helvetica Neue', Helvetica, 'Apple SD Gothic Neo', sans-serif;
-      font-weight: 300;
+      font-weight: 400;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -655,21 +655,17 @@
 
   <!-- ── GALLERY PAGE ── -->
   <div id="page-gallery" class="page">
-    <div class="gallery-sort">
+    <div class="gallery-sort" style="margin-bottom:1.2rem;">
       <button class="sort-btn active" id="sort-recent" onclick="setGallerySort('recent')">최근 추가 순</button>
       <button class="sort-btn" id="sort-oldest" onclick="setGallerySort('oldest')">오래된 순</button>
     </div>
-    <div class="gallery" id="gallery-grid"></div>
-  </div>
-
-  <!-- ── GALLERY ITEM PAGE ── -->
-  <div id="page-gallery-item" class="page">
-    <a class="article-back" href="#" onclick="showPage('gallery')">← 돌아가기</a>
-    <div class="gallery-item-layout" style="margin-top:2rem;">
-      <img id="gallery-item-photo" src="" alt="">
-      <div class="gallery-item-text">
-        <p class="gallery-item-note" id="gallery-item-note"></p>
-        <p class="gallery-item-date" id="gallery-item-date"></p>
+    <div class="gallery-wrap">
+      <div class="gallery" id="gallery-grid"></div>
+      <div class="gallery-panel" id="gallery-panel">
+        <img class="gallery-panel-img" id="gallery-panel-img" src="" alt="">
+        <p class="gallery-panel-note" id="gallery-panel-note"></p>
+        <p class="gallery-panel-date" id="gallery-panel-date"></p>
+        <span class="gallery-panel-close" onclick="closeGalleryPanel()">닫기 ×</span>
       </div>
     </div>
   </div>
@@ -784,15 +780,18 @@
 
   function showGalleryItem(i) {
     const g = galleryData[i];
-    document.getElementById('gallery-item-photo').src = g.photo;
-    document.getElementById('gallery-item-note').textContent = g.note;
-    document.getElementById('gallery-item-date').textContent = g.date;
-    const prev = galleryData[i+1];
-    const next = galleryData[i-1];
-    document.getElementById('gallery-item-nav').innerHTML =
-      `<span>${prev ? `<a onclick="showGalleryItem(${i+1})">← 이전</a>` : ''}</span>` +
-      `<span>${next ? `<a onclick="showGalleryItem(${i-1})">다음 →</a>` : ''}</span>`;
-    showPage('gallery-item');
+    document.getElementById('gallery-panel-img').src = g.photo;
+    document.getElementById('gallery-panel-note').textContent = g.note;
+    document.getElementById('gallery-panel-date').textContent = g.date;
+    document.getElementById('gallery-panel').classList.add('visible');
+    document.querySelectorAll('.gallery-photo').forEach((el, idx) => {
+      el.classList.toggle('selected', idx === i);
+    });
+  }
+
+  function closeGalleryPanel() {
+    document.getElementById('gallery-panel').classList.remove('visible');
+    document.querySelectorAll('.gallery-photo').forEach(el => el.classList.remove('selected'));
   }
 
   const quotesData = [
@@ -910,7 +909,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', 'gallery-item': 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
+    const navMap = { thoughts: 'nav-thoughts', quotes: 'nav-quotes', gallery: 'nav-gallery', tea: 'nav-tea', 'tea-item': 'nav-tea', guestbook: 'nav-guestbook' };
     if (navMap[name]) document.getElementById(navMap[name]).classList.add('active');
     if (name === 'guestbook') renderGuestbook();
     if (name === 'thoughts') renderThoughts();
@@ -968,7 +967,6 @@
   if (hash === 'thoughts') showPage('thoughts');
   else if (hash === 'quotes') showPage('quotes');
   else if (hash === 'gallery') showPage('gallery');
-  else if (hash === 'gallery-item') showPage('gallery');
   else if (hash === 'tea') showPage('tea');
   else if (hash === 'guestbook') showPage('guestbook');
   else if (hash.startsWith('article-')) showArticle(parseInt(hash.replace('article-', '')));
