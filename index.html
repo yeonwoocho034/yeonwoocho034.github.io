@@ -679,6 +679,11 @@
     .sort-btn.active { color: var(--text); }
     .sort-btn:hover { color: var(--text-muted); }
 
+    .article-body a, .tea-body a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    }
   </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
@@ -862,7 +867,7 @@
       title: 'LUCIPIA FRESH TEA, Christmas Wreath',
       date: 'Mar 22, 2026',
       photos: ['photos/tea2.png'],
-      body: '<p>크리스마스 에디션으로 나왔다.<br>결국 홍차이긴 한데 견과류, 사과, 시나몬, 그리고 기타 향신료가 들어갔다.<br>카페인 있는 듯.<br>향은 크리스마스 저녁날 아주 따뜻한 난로 앞에 앉아있는 느낌임.<br>애플티, 시나몬가루, 달달한 우유를 섞은 차이티의 향기가 한번에 난다.<br></p><p>상세페이지: https://www.lupicia.com.au/22/black-tea-flavoured/202/christmas-wreath</p>'
+      body: '<p>크리스마스 에디션으로 나왔다.<br>결국 홍차이긴 한데 견과류, 사과, 시나몬, 그리고 기타 향신료가 들어갔다.<br>카페인 있는 듯.<br>향은 크리스마스 저녁날 아주 따뜻한 난로 앞에 앉아있는 느낌임.<br>애플티, 시나몬가루, 달달한 우유를 섞은 차이티의 향기가 한번에 난다.<br></p><p>상세페이지: <a href="https://www.lupicia.com.au/22/black-tea-flavoured/202/christmas-wreath" target="_blank"></a></p>'
     },
     {
       title: 'LUCIPIA FRESH TEA, Momo Green Tea',
