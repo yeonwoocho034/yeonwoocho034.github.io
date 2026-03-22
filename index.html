@@ -44,7 +44,7 @@
       border-bottom: 1px solid var(--border);
     }
     .site-header-left { display: flex; flex-direction: column; justify-content: flex-end; }
-    .site-header-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; padding-bottom: 1rem; }
+    .site-header-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; padding-bottom: 0.5rem; }
     nav { display: contents; }
 
     .site-name {
@@ -661,6 +661,38 @@
     .sort-btn:hover { color: var(--text-muted); }
 
   </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDM8OHa2lbRa2lM2OTn8sJryGgBTxokCBU",
+      authDomain: "yeonwoo-cho.firebaseapp.com",
+      databaseURL: "https://yeonwoo-cho-default-rtdb.firebaseio.com",
+      projectId: "yeonwoo-cho",
+      storageBucket: "yeonwoo-cho.firebasestorage.app",
+      messagingSenderId: "542377853471",
+      appId: "1:542377853471:web:18672ed0212285525f8b2a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const gbRef = ref(db, 'guestbook');
+
+    window._fbDb = db;
+    window._gbRef = gbRef;
+    window._fbPush = push;
+    window._fbOnValue = onValue;
+    window._fbRemove = remove;
+    window._fbRef = ref;
+
+    onValue(gbRef, (snapshot) => {
+      const data = snapshot.val();
+      const entries = data ? Object.entries(data).reverse().map(([key, val]) => ({ ...val, key })) : [];
+      window._gbEntries = entries;
+      if (typeof window.renderGuestbook === 'function') window.renderGuestbook();
+    });
+  </script>
 </head>
 <body>
 <div class="wrap">
@@ -1024,19 +1056,18 @@
     if (pw === '0304') { adminMode = true; renderGuestbook(); }
   }
 
-  function deleteEntry(idx) {
-    const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
-    entries.splice(idx, 1);
-    localStorage.setItem('gb-entries', JSON.stringify(entries));
-    renderGuestbook();
+  function deleteEntry(key) {
+    if (window._fbRemove && window._fbRef && window._fbDb) {
+      window._fbRemove(window._fbRef(window._fbDb, 'guestbook/' + key));
+    }
   }
 
   function renderGuestbook() {
     const list = document.getElementById('gb-list');
-    const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
+    const entries = window._gbEntries || [];
     list.innerHTML = entries.map((e, i) => `
       <div class="gb-entry fade-up" style="animation-delay:${i*0.08}s">
-        <p class="gb-entry-name">${e.name}${adminMode ? ` <span onclick="deleteEntry(${i})" style="cursor:pointer;font-size:12px;color:#aaa;margin-left:8px;">삭제</span>` : ''}</p>
+        <p class="gb-entry-name">${e.name}${adminMode ? ` <span onclick="deleteEntry('${e.key}')" style="cursor:pointer;font-size:12px;color:#aaa;margin-left:8px;">삭제</span>` : ''}</p>
         <p class="gb-entry-msg">${e.msg}</p>
         <p class="gb-entry-date">${e.date}</p>
       </div>`).join('');
@@ -1093,15 +1124,11 @@
     if (!name || !msg) return;
     const today = new Date();
     const date = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const entries = JSON.parse(localStorage.getItem('gb-entries') || '[]');
-    entries.push({ name, msg, date });
-    localStorage.setItem('gb-entries', JSON.stringify(entries));
-    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(new FormData(e.target)).toString()
-    }).catch(() => {});
+    if (window._fbPush && window._gbRef) {
+      window._fbPush(window._gbRef, { name, msg, date });
+    }
     document.getElementById('gb-name').value = '';
     document.getElementById('gb-msg').value = '';
-    renderGuestbook();
   }
 
   renderHomeRecent();
