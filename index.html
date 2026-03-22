@@ -932,7 +932,7 @@
   function renderGallery() {
     const el = document.getElementById('gallery-grid');
     let items = galleryData.map((g, i) => ({ ...g, i }));
-    if (gallerySortMode === 'recent') items = items.reverse();
+    if (gallerySortMode === 'oldest') items = items.reverse();
     el.innerHTML = items.map((g, idx) => `
       <div class="gallery-photo fade-in" data-idx="${g.i}" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showGalleryItem(${g.i})">
         <img src="${g.photo}" alt="">
@@ -1004,7 +1004,7 @@
   function renderArchive() {
     const el = document.getElementById('archive-grid');
     let items = archiveData.map((g, i) => ({ ...g, i }));
-    if (archiveSortMode === 'recent') items = items.reverse();
+    if (archiveSortMode === 'oldest') items = items.reverse();
     el.innerHTML = items.map((g, idx) => `
       <div class="gallery-photo fade-in" data-idx="${g.i}" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showArchiveItem(${g.i})">
         <img src="${g.photo}" alt="">
