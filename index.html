@@ -404,8 +404,8 @@
 
       /* GALLERY */
       .gallery-wrap {
-        grid-template-columns: 1fr 2fr;
-        gap: 1rem;
+        grid-template-columns: 1fr 3fr;
+        gap: 0.6rem;
       }
       .gallery-photo { width: 100%; margin-right: 0; }
 
@@ -473,11 +473,30 @@
     .gallery {
       width: 100%;
     }
-    .gallery-photo { width: calc(50% - 3px); margin-bottom: 6px; float: left; }
+    .gallery-photo { width: calc(50% - 3px); margin-bottom: 6px; float: left; position: relative; }
     .gallery-photo:nth-child(odd) { margin-right: 6px; }
     .gallery-photo img { width: 100%; height: auto; display: block; cursor: pointer; transition: opacity 0.2s; }
     .gallery-photo img:hover { opacity: 0.75; }
     .gallery-photo.selected img { opacity: 0.45; }
+    .gallery-photo .date-tooltip {
+      position: absolute;
+      right: -4.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.5);
+      color: var(--text);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+    }
+    .gallery-photo:hover .date-tooltip { opacity: 1; }
 
     /* ── GALLERY PANEL ── */
     .gallery-panel {
@@ -940,6 +959,7 @@
     el.innerHTML = items.map((g, idx) => `
       <div class="gallery-photo fade-in" data-idx="${g.i}" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showGalleryItem(${g.i})">
         <img src="${g.photo}" alt="">
+        <span class="date-tooltip">${g.date}</span>
       </div>`).join('');
     if (typeof imagesLoaded !== 'undefined') {
       imagesLoaded(el, function() {
