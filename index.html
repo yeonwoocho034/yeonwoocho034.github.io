@@ -407,7 +407,7 @@
         grid-template-columns: 1fr 2fr;
         gap: 1rem;
       }
-      .gallery { columns: 1; }
+      .gallery-photo { width: 100%; margin-right: 0; }
 
       /* GUESTBOOK */
       .guestbook-list { border-top: 1px solid var(--border); }
@@ -471,10 +471,10 @@
       align-items: start;
     }
     .gallery {
-      columns: 2;
-      column-gap: 6px;
+      width: 100%;
     }
-    .gallery-photo { break-inside: avoid; margin-bottom: 6px; }
+    .gallery-photo { width: calc(50% - 3px); margin-bottom: 6px; float: left; }
+    .gallery-photo:nth-child(odd) { margin-right: 6px; }
     .gallery-photo img { width: 100%; height: auto; display: block; cursor: pointer; transition: opacity 0.2s; }
     .gallery-photo img:hover { opacity: 0.75; }
     .gallery-photo.selected img { opacity: 0.45; }
@@ -693,6 +693,8 @@
       if (typeof window.renderGuestbook === 'function') window.renderGuestbook();
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -929,6 +931,8 @@
     renderGallery();
   }
 
+  let galleryMasonry = null;
+
   function renderGallery() {
     const el = document.getElementById('gallery-grid');
     let items = galleryData.map((g, i) => ({ ...g, i }));
@@ -937,6 +941,12 @@
       <div class="gallery-photo fade-in" data-idx="${g.i}" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showGalleryItem(${g.i})">
         <img src="${g.photo}" alt="">
       </div>`).join('');
+    if (typeof imagesLoaded !== 'undefined') {
+      imagesLoaded(el, function() {
+        if (galleryMasonry) galleryMasonry.destroy();
+        galleryMasonry = new Masonry(el, { itemSelector: '.gallery-photo', columnWidth: '.gallery-photo', percentPosition: true, gutter: 6 });
+      });
+    }
   }
 
   function showGalleryItem(i) {
@@ -1001,6 +1011,8 @@
     renderArchive();
   }
 
+  let archiveMasonry = null;
+
   function renderArchive() {
     const el = document.getElementById('archive-grid');
     let items = archiveData.map((g, i) => ({ ...g, i }));
@@ -1009,6 +1021,12 @@
       <div class="gallery-photo fade-in" data-idx="${g.i}" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showArchiveItem(${g.i})">
         <img src="${g.photo}" alt="">
       </div>`).join('');
+    if (typeof imagesLoaded !== 'undefined') {
+      imagesLoaded(el, function() {
+        if (archiveMasonry) archiveMasonry.destroy();
+        archiveMasonry = new Masonry(el, { itemSelector: '.gallery-photo', columnWidth: '.gallery-photo', percentPosition: true, gutter: 6 });
+      });
+    }
   }
 
   function showArchiveItem(i) {
