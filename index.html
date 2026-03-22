@@ -945,8 +945,8 @@
     document.getElementById('gallery-panel-note').textContent = g.note;
     document.getElementById('gallery-panel-date').textContent = g.date;
     document.getElementById('gallery-panel').classList.add('visible');
-    document.querySelectorAll('.gallery-photo').forEach((el, idx) => {
-      el.classList.toggle('selected', idx === i);
+    document.querySelectorAll('.gallery-photo').forEach((el) => {
+      el.classList.toggle('selected', el.dataset.idx === String(i));
     });
   }
 
@@ -1006,7 +1006,7 @@
     let items = archiveData.map((g, i) => ({ ...g, i }));
     if (archiveSortMode === 'recent') items = items.reverse();
     el.innerHTML = items.map((g, idx) => `
-      <div class="gallery-photo fade-in" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showArchiveItem(${g.i})">
+      <div class="gallery-photo fade-in" data-idx="${g.i}" style="animation-delay:${(Math.random()*0.3+idx*0.05).toFixed(2)}s" onclick="showArchiveItem(${g.i})">
         <img src="${g.photo}" alt="">
       </div>`).join('');
   }
@@ -1017,8 +1017,8 @@
     document.getElementById('archive-panel-note').textContent = g.note;
     document.getElementById('archive-panel-date').textContent = g.date;
     document.getElementById('archive-panel').classList.add('visible');
-    document.querySelectorAll('#archive-grid .gallery-photo').forEach((el, idx) => {
-      el.classList.toggle('selected', idx === i);
+    document.querySelectorAll('#archive-grid .gallery-photo').forEach((el) => {
+      el.classList.toggle('selected', el.dataset.idx === String(i));
     });
   }
 
