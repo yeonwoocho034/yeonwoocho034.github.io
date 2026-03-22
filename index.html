@@ -885,22 +885,22 @@
     },
     {
       photo: 'photos/2.jpeg',
-      note: 'Estelle 언니랑 Goldstein Reserve에서. <br>맨발 토스트!',
+      note: 'Estelle 언니랑 Goldstein Reserve에서.<br>맨발 토스트!',
       date: 'Jan 4, 2026'
     },
     {
       photo: 'photos/3.jpeg',
-      note: 'Coogie Beach, Sydney. <br>Wylies Baths.',
+      note: 'Coogie Beach, Sydney.<br>Wylies Baths.',
       date: 'Jan 4, 2026'
     },
     {
       photo: 'photos/4.jpeg',
-      note: '마트 팬케이크는 항상 맛있다. <br>유치원 때 간식으로 자주 나왔었는데 탄수화물 단맛이 충격적으로 좋아서 그 이후로 같은 음식을 계속 찾아다녔다. <br>크고 보니 그냥 잘 구운 팬케이크였다.',
+      note: '마트 팬케이크는 항상 맛있다.<br>유치원 때 간식으로 자주 나왔었는데 탄수화물 단맛이 충격적으로 좋아서 그 이후로 같은 음식을 계속 찾아다녔다.<br>크고 보니 그냥 잘 구운 팬케이크였다.',
       date: 'Oct 31, 2025'
     },
     {
       photo: 'photos/6.jpeg',
-      note: '내가 진짜 좋아하는 고구마칩. <br>살짝 소금간이 되어있다. <br>Estelle 언니랑 입맛 토크하다가 언니도 이거 좋아한대서 막 웃었다.',
+      note: '내가 진짜 좋아하는 고구마칩.<br>살짝 소금간이 되어있다.<br>Estelle 언니랑 입맛 토크하다가 언니도 이거 좋아한대서 막 웃었다.',
       date: 'Nov 11, 2025'
     },
     {
@@ -915,7 +915,7 @@
     },
     {
       photo: 'photos/11.jpeg',
-      note: '그냥 보고 있으면 마음이 편해짐. <br>찍은 직후에는 그냥 그래서 지울까 했는데. <br>왜 그랬지?',
+      note: '보고 있으면 마음이 엄청 편해짐.<br>찍은 직후에는 그냥 그래서 지울까 했는데.<br>왜 그랬지?',
       date: 'Aug 30, 2025'
     }
   ];
@@ -942,7 +942,7 @@
   function showGalleryItem(i) {
     const g = galleryData[i];
     document.getElementById('gallery-panel-img').src = g.photo;
-    document.getElementById('gallery-panel-note').textContent = g.note;
+    document.getElementById('gallery-panel-note').innerHTML = g.note;
     document.getElementById('gallery-panel-date').textContent = g.date;
     document.getElementById('gallery-panel').classList.add('visible');
     document.querySelectorAll('.gallery-photo').forEach((el) => {
@@ -1014,7 +1014,7 @@
   function showArchiveItem(i) {
     const g = archiveData[i];
     document.getElementById('archive-panel-img').src = g.photo;
-    document.getElementById('archive-panel-note').textContent = g.note;
+    document.getElementById('gallery-panel-note').innerHTML = g.note;
     document.getElementById('archive-panel-date').textContent = g.date;
     document.getElementById('archive-panel').classList.add('visible');
     document.querySelectorAll('#archive-grid .gallery-photo').forEach((el) => {
